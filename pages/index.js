@@ -1,25 +1,31 @@
-import { useFonts } from 'expo-font';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';   
 import * as Animatable from 'react-native-animatable';
 
 export default function Bem_Vindo() {
-
     const navigation = useNavigation();
-
-    useFonts({ 'Oswald': require('../assets/fonts/Oswald-VariableFont_wght.ttf') });
+    const [fontsLoaded] = useFonts({
+        'Oswald': require('../assets/fonts/Oswald-VariableFont_wght.ttf')
+    });
+    
+    if (!fontsLoaded) {
+        return null;
+    }
 
     return (
-        
-        <View style={styles.container} >
+        <View style={styles.container}>
             <View style={styles.containerLogo}>
-                <Animatable.Image animation={"flipInY"} delay={1000} source={require('../assets/logo_Senai.png')}
+                <Animatable.Image
+                    delay={1000}
+                    animation="flipInY"
+                    source={require("../assets/logo_Senai.png")}
                     style={styles.logo}
-                    resizeMode='contain'
+                    resizeMode="contain"
                 />
             </View>
-            <Animatable.View delay={600} animation='fadeInUp'  style={styles.containerForm}>
+            <Animatable.View delay={600} animation='fadeInUp' style={styles.containerForm}>
                 <Text style={styles.title}>
                     Monitore e organize seus recursos didáticos de qualquer lugar!
                 </Text>
@@ -35,8 +41,9 @@ export default function Bem_Vindo() {
                 </TouchableOpacity>
             </Animatable.View>
         </View>
-    )
+    );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -60,14 +67,14 @@ const styles = StyleSheet.create({
         paddingEnd: '5%'
     },
     title: {
-        fontSize: 25,
+        fontFamily: 'Oswald', // Aplica a fonte personalizada
+        fontSize: 24,
         marginTop: 20,
-        marginBottom: 14,
-        color: "#FFF",
-        fontFamily: 'Oswald',
+        marginBottom: 12,
+        color: "#FFF"
     },
     text: {
-        fontSize: 10,
+        fontFamily: 'Oswald',
         color: '#a1a1a1'
     },
     button: {
@@ -82,8 +89,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonText: {
+        fontFamily: 'Oswald',
         fontSize: 18,
         color: '#880000',
         fontWeight: 'bold'
     }
-})
+});

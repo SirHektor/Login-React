@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -6,53 +7,84 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Button
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { Ionicons } from '@expo/vector-icons';
+import { useFonts } from 'expo-font';
+import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
-export default function Acesso({ navigation }) {
+
+export default function Acesso() {
+
+    const navigation = useNavigation();
+    const [fontsLoaded] = useFonts({
+        'Oswald': require('../assets/fonts/Oswald-VariableFont_wght.ttf')
+    });
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+
+    const handleLogin = () => {
+        // Verificar as credenciais de login aqui
+        if (email === 'admin@123' && password === '123') {
+            navigation.navigate('TelaDeSucesso', { email: email });
+        } else {
+            // caso der erro
+            Alert.alert('Credenciais incorretas', 'Por favor, verifique seu email e senha.');
+        }
+    };
+
+
+    if (!fontsLoaded) {
+        return null;
+    }
+
     return (
         <KeyboardAvoidingView style={{ flex: 1 }}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <View style={styles.container}>
                     <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-                        <Text style={styles.message}>Bem-vindo(a)</Text>
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={styles.buttonback}>
-                            <Text style={styles.buttonText}>
-                                Voltar
-                            </Text>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonback}>
+                            <Ionicons name="arrow-back-circle-outline" size={44} color="white" />
                         </TouchableOpacity>
+                        <Text style={styles.message}>Bem-vindo(a)</Text>
                     </Animatable.View>
                     <Animatable.View animation="fadeInUp" style={styles.containerForm}>
-                        <Text style={styles.title}>
-                            E-mail
-                        </Text>
+                        <Text style={styles.title}>E-mail</Text>
                         <TextInput
                             placeholder='Digite um email...'
                             style={styles.input}
+                            onChangeText={text => setEmail(text)}
+                            value={email}
                         />
                         <TextInput
                             placeholder='Sua senha'
                             style={styles.input}
+                            onChangeText={text => setPassword(text)}
+                            value={password}
+                            secureTextEntry
                         />
-                        <TouchableOpacity style={styles.button}>
-                            <Text style={styles.buttonText}>
-                                Acessar
-                            </Text>
+                        <Button style={styles.buttonCadastro}
+                            title="Cadastrar"
+                            onPress={() => navigation.navigate('Cadastro')}
+                            color={'#880000'}
+                        />
 
+                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                            <Text style={styles.buttonText}>Acessar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonRegister}>
-                            <Text style={styles.registerText}>
-                                Não possui uma conta? Cadastre-se
-                            </Text>
+                            <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
                         </TouchableOpacity>
                     </Animatable.View>
                 </View>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -60,8 +92,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#880000'
     },
-    buttonback:{
-        bottom:80,
+    buttonback: {
+        bottom: 20,
     },
     containerHeader: {
         marginTop: '14%',
@@ -69,6 +101,7 @@ const styles = StyleSheet.create({
         paddingStart: '5%',
     },
     message: {
+        fontFamily: 'Oswald',
         fontSize: 28,
         fontWeight: 'bold',
         color: "#FFF"
@@ -82,6 +115,7 @@ const styles = StyleSheet.create({
         paddingEnd: "5%"
     },
     title: {
+        fontFamily: 'Oswald',
         fontSize: 20,
         marginTop: 28,
     },
@@ -101,6 +135,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonText: {
+        fontFamily: 'Oswald',
         color: "#FFF",
         fontSize: 18,
         fontWeight: 'bold'
@@ -111,5 +146,8 @@ const styles = StyleSheet.create({
     },
     registerText: {
         color: '#a1a1a1'
-    }
-})
+    },
+    buttonCadastro:{
+        backgroundColor: '#880000',
+    },
+});
